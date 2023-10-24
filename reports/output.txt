@@ -1,0 +1,41 @@
+Feature: WeatherAPI current weather information # api_tests/features/api_test.feature:1
+
+  Scenario Outline: Get current weather information for various locations -- @1.1   # api_tests/features/api_test.feature:12
+    When I request current weather information for "London"                         # api_tests/steps/api_steps.py:17
+    Then the response status code should be 200                                     # api_tests/steps/api_steps.py:26
+    And the response should contain "location" key                                  # api_tests/steps/api_steps.py:31
+    And the "location" key should contain "name" equal to "London"                  # api_tests/steps/api_steps.py:37
+
+  Scenario Outline: Get current weather information for various locations -- @1.2   # api_tests/features/api_test.feature:13
+    When I request current weather information for "Paris"                          # api_tests/steps/api_steps.py:17
+    Then the response status code should be 200                                     # api_tests/steps/api_steps.py:26
+    And the response should contain "location" key                                  # api_tests/steps/api_steps.py:31
+    And the "location" key should contain "name" equal to "Paris"                   # api_tests/steps/api_steps.py:37
+
+  Scenario Outline: Get current weather information for various locations -- @1.3   # api_tests/features/api_test.feature:14
+    When I request current weather information for "New York"                       # api_tests/steps/api_steps.py:17
+    Then the response status code should be 200                                     # api_tests/steps/api_steps.py:26
+    And the response should contain "location" key                                  # api_tests/steps/api_steps.py:31
+    And the "location" key should contain "name" equal to "New York"                # api_tests/steps/api_steps.py:37
+
+  Scenario Outline: Request current weather information for an invalid location -- @1.1   # api_tests/features/api_test.feature:24
+    When I request current weather information for a invalid "InvalidLocation"            # api_tests/steps/api_steps.py:62
+      Traceback (most recent call last):
+        File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/behave/model.py", line 1329, in run
+          match.run(runner.context)
+        File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/behave/matchers.py", line 98, in run
+          self.func(context, *args, **kwargs)
+        File "api_tests/steps/api_steps.py", line 64, in step_impl
+          raise NotImplementedError(
+      NotImplementedError: STEP: When I request current weather information for a invalid "InvalidLocation"
+
+    Then the response status code should be 400 or 404                                    # None
+    And the response should contain "error" key                                           # None
+
+  Scenario: Request current weather information with missing API key        # api_tests/features/api_test.feature:26
+    When I request current weather information for "London" without API key # api_tests/steps/api_steps.py:68
+    Then the response status code should be 401 or 403                      # api_tests/steps/api_steps.py:78
+    And the response should contain "error" key                             # api_tests/steps/api_steps.py:56
+      Assertion Failed: Expected <{'message': 'Invalid API key. Go to https://docs.rapidapi.com/docs/keys for more info.'}> to contain key <error>, but did not.
+
+
